@@ -1,2 +1,2 @@
 # Orc2Excel
-一个基于OCR识别引擎的识别表格文字并将结果以Excel电子表格的形式原样导出的Android客户端工具
+* A Android client tool based on the OCR recognition engine that identifies the text of the table and exports the results in the form of an Excel spreadsheet
