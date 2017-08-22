@@ -124,6 +124,7 @@ public class OCRActivity extends Activity implements OnClickListener {
 	private void savePhoto(Bitmap bitmap,int i){
 		
 		File file;
+
 		File dir = Environment.getExternalStorageDirectory();
 		file = new File(dir, "temp_"+i+".jpg");
 		try {
@@ -163,20 +164,25 @@ public class OCRActivity extends Activity implements OnClickListener {
 	 * http://developer.android.com/training/camera/photobasics.html
 	 */
 	private File createImageFile() throws IOException {
-		// Create an image file name
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
-				.format(new Date());
-		String imageFileName = "JPEG_" + timeStamp + "_";
-		String storageDir = Environment.getExternalStorageDirectory()
-				+ "/TessOCR";
-		File dir = new File(storageDir);
-		if (!dir.exists())
-			dir.mkdir();
+		File image = null;
+		try{
+			// Create an image file name
+			String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
+					.format(new Date());
+			String imageFileName = "JPEG_" + timeStamp + "_";
+			String storageDir = getFilesDir().getAbsolutePath()
+					+ "/TessOCR";
+			File dir = new File(storageDir);
+			if (!dir.exists())
+				dir.mkdir();
 
-		File image = new File(storageDir + "/" + imageFileName + ".jpg");
+			image = new File(dir, imageFileName + ".jpg");
+			image.createNewFile();
+			// Save a file: path for use with ACTION_VIEW intents
+			mCurrentPhotoPath = image.getAbsolutePath();
+		}catch (Exception e){
 
-		// Save a file: path for use with ACTION_VIEW intents
-		mCurrentPhotoPath = image.getAbsolutePath();
+		}
 		return image;
 	}
 
@@ -276,8 +282,10 @@ public class OCRActivity extends Activity implements OnClickListener {
 				Bitmap bitmap = pieceBitmap(uri);
 				for (TrimCell trimCell : trimcelllist) {
 					try {
+
 						Bitmap bitmaptemp = Bitmap.createBitmap(bitmap, trimCell.getLeftTopColumn(), trimCell.getLeftTopRow(), Math.abs(trimCell.getRightBottomColumn()-trimCell.getLeftTopColumn()), trimCell.getRightBottomRow()-trimCell.getLeftTopRow());
 						//执行OCR识别
+
 						String result = mTessOCR.getOCRResult(bitmaptemp);
 						datas.add(result);
 					} catch (Exception e) {
@@ -372,7 +380,7 @@ public class OCRActivity extends Activity implements OnClickListener {
 			Toast.makeText(getApplicationContext(), "SD卡不可用", Toast.LENGTH_LONG).show();
 			return;
 		}
-		File dir = Environment.getExternalStorageDirectory();
+		File dir = new File(getFilesDir().getAbsolutePath() + "/tessdata");
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
