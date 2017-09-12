@@ -24,9 +24,11 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.View;
@@ -61,6 +63,10 @@ public class OCRActivity extends Activity implements OnClickListener {
 		mButtonCamera = (Button) findViewById(R.id.bt_camera);
 		mButtonCamera.setOnClickListener(this);
 		mTessOCR = new TessOCR(getApplicationContext());
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+			StrictMode.setVmPolicy(builder.build());
+		}
 	}
 
 	private void uriOCR(Uri uri) {
@@ -94,37 +100,24 @@ public class OCRActivity extends Activity implements OnClickListener {
 	
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 
 	}
 
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
-
 		mTessOCR.onDestroy();
 	}
 	
 	//保存图片
 	private void savePhoto(Bitmap bitmap,int i){
-		
 		File file;
-
 		File dir = Environment.getExternalStorageDirectory();
 		file = new File(dir, "temp_"+i+".jpg");
 		try {
@@ -160,9 +153,6 @@ public class OCRActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	/**
-	 * http://developer.android.com/training/camera/photobasics.html
-	 */
 	private File createImageFile() throws IOException {
 		File image = null;
 		try{
@@ -175,10 +165,8 @@ public class OCRActivity extends Activity implements OnClickListener {
 			File dir = new File(storageDir);
 			if (!dir.exists())
 				dir.mkdir();
-
 			image = new File(dir, imageFileName + ".jpg");
 			image.createNewFile();
-			// Save a file: path for use with ACTION_VIEW intents
 			mCurrentPhotoPath = image.getAbsolutePath();
 		}catch (Exception e){
 
@@ -188,7 +176,6 @@ public class OCRActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		if (requestCode == REQUEST_TAKE_PHOTO
 				&& resultCode == Activity.RESULT_OK) {
 			setPic();
@@ -206,31 +193,25 @@ public class OCRActivity extends Activity implements OnClickListener {
 		// Get the dimensions of the View
 		int targetW = mImage.getWidth();
 		int targetH = mImage.getHeight();
-
 		// Get the dimensions of the bitmap
 		BitmapFactory.Options bmOptions = new BitmapFactory.Options();
 		bmOptions.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
 		int photoW = bmOptions.outWidth;
 		int photoH = bmOptions.outHeight;
-
 		// Determine how much to scale down the image
 		int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
-
 		// Decode the image file into a Bitmap sized to fill the View
 		bmOptions.inJustDecodeBounds = false;
 		bmOptions.inSampleSize = scaleFactor << 1;
 		bmOptions.inPurgeable = true;
-
 		Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
 		mImage.setImageBitmap(bitmap);
 		doOCR();
-
 	}
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		int id = v.getId();
 		switch (id) {
 		case R.id.bt_gallery:
@@ -269,7 +250,6 @@ public class OCRActivity extends Activity implements OnClickListener {
 	}
 	
 	private void doOCR(final Uri uri) {
-		
 		if (mProgressDialog == null) {
 			mProgressDialog = ProgressDialog.show(this, "Processing",
 					"正在识别...", true);
@@ -282,10 +262,8 @@ public class OCRActivity extends Activity implements OnClickListener {
 				Bitmap bitmap = pieceBitmap(uri);
 				for (TrimCell trimCell : trimcelllist) {
 					try {
-
 						Bitmap bitmaptemp = Bitmap.createBitmap(bitmap, trimCell.getLeftTopColumn(), trimCell.getLeftTopRow(), Math.abs(trimCell.getRightBottomColumn()-trimCell.getLeftTopColumn()), trimCell.getRightBottomRow()-trimCell.getLeftTopRow());
 						//执行OCR识别
-
 						String result = mTessOCR.getOCRResult(bitmaptemp);
 						datas.add(result);
 					} catch (Exception e) {
@@ -302,9 +280,7 @@ public class OCRActivity extends Activity implements OnClickListener {
 						//打开Excel文件
 						openExcel();
 					}
-
 				});
-				
 			};
 		}).start();
 	}
@@ -363,7 +339,8 @@ public class OCRActivity extends Activity implements OnClickListener {
 					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					startActivity(intent);
 				} catch (Exception e) {
-					Toast.makeText(getApplicationContext(), "未检测出可以打开此类型文件的软件，请先安装Excel阅读器！", Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplicationContext(),
+							"未检测出可以打开此类型文件的软件，请先安装Excel阅读器！", Toast.LENGTH_LONG).show();
 				}
 			}
 		});
@@ -401,6 +378,7 @@ public class OCRActivity extends Activity implements OnClickListener {
 			}
 			//写入文件中
 			wwb.write();
+
 			wwb.close();
 			
 		} catch (Exception e) {
@@ -411,7 +389,7 @@ public class OCRActivity extends Activity implements OnClickListener {
 	 private static long getAvailableStorage(Context context) {        
 		 File path = Environment.getExternalStorageDirectory();
 		 StatFs statFs = new StatFs(path.getPath());        
-		 long blockSize = statFs.getBlockSize();   
+		 long blockSize = statFs.getBlockSize();
 		 long availableBlocks = statFs.getAvailableBlocks();        
 		 long availableSize = blockSize * availableBlocks;        
 		 return availableSize/1024/1024;    //单位MB

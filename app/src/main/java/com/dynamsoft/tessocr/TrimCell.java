@@ -1,15 +1,15 @@
 package com.dynamsoft.tessocr;
 
 public class TrimCell {
-	private int LeftTopRow;
-	private int LeftTopColumn;
-	private int RightBottomRow;
-	private int RightBottomColumn;
+	private int LeftTopRow;	//单元格左上角的纵坐标像素位置
+	private int LeftTopColumn;	//单元格左上角的横坐标像素位置
+	private int RightBottomRow;	//单元格右下角的纵坐标像素位置
+	private int RightBottomColumn;	//单元格右下角的横坐标像素位置
 
-	private int StartRow; 
-	private int EndRow;
-	private int StartColumn;
-	private int EndColumn;
+	private int StartRow;	 //在原表格的开始行
+	private int EndRow;	 //在原表格的结束行
+	private int StartColumn;	//在原表格的开始列
+	private int EndColumn;		//在表格的结束列
 	public int getLeftTopRow() {
 		return LeftTopRow;
 	}
