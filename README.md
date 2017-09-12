@@ -1,11 +1,11 @@
 # Ocr2Excel
 一个基于OCR识别引擎的识别表格文字并将结果以Excel电子表格的形式原样导出的Android客户端工具
-* ##界面截图
+## 界面截图
 ![image]( https://github.com/WebberCao/Ocr2Excel/raw/master/app/src/main/assets/image11.jpg )
 ![image]( https://github.com/WebberCao/Ocr2Excel/raw/master/app/src/main/assets/image22.jpg )
 ![image]( https://github.com/WebberCao/Ocr2Excel/raw/master/app/src/main/assets/image33.jpg )
 ![image]( https://github.com/WebberCao/Ocr2Excel/raw/master/app/src/main/assets/image44.jpg )
-* ##实现思路
+## 实现思路
 1. 对表格图片进行灰度化和二值化处理
 2. 对图像进行倾斜矫正
 3. 进行表格线提取
@@ -15,7 +15,7 @@
 6. 对剪裁得到的内容逐个进行Ocr识别
 7. 将识别的内容根据返回的位置数据写入Excel表格
 其中的1~5步考虑到效率问题，使用C++代码编写，并编译成了so文件在代码中进行调用。
-* ##相关代码说明
+## 相关代码说明
 ```javascript
 public class TrimCell {
 	private int LeftTopRow;	  //单元格左上角的纵坐标像素位置
