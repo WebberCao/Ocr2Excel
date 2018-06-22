@@ -104,3 +104,5 @@ if(trimcelllist.get(i).getStartRow()!=trimcelllist.get(i).getEndRow() || trimcel
    ws.mergeCells(trimcelllist.get(i).getStartColumn(),trimcelllist.get(i).getStartRow(), trimcelllist.get(i).getEndColumn(),trimcelllist.get(i).getEndRow());
 }
 ```
+
+#### 如果有什么错误或者建议欢迎随时指出，大家可以讨论一起进步。如果您觉得对您有用，请给个Star，谢谢~
