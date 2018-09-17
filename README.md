@@ -1,5 +1,6 @@
 # Ocr2Excel
 一个基于OCR识别引擎的识别表格文字并将结果以Excel电子表格的形式原样导出的Android客户端工具
+2018/09/17更新：修复了识别完成之后找不到保存的Excel文件的问题。
 ## 界面截图
 ![image]( https://github.com/WebberCao/Ocr2Excel/raw/master/app/src/main/assets/image11.jpg )
 ![image]( https://github.com/WebberCao/Ocr2Excel/raw/master/app/src/main/assets/image22.jpg )
