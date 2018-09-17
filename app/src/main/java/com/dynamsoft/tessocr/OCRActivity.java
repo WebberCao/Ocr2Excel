@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -56,7 +57,6 @@ public class OCRActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
 		mImage = (ImageView) findViewById(R.id.image);
 		mButtonGallery = (Button) findViewById(R.id.bt_gallery);
 		mButtonGallery.setOnClickListener(this);
@@ -357,7 +357,7 @@ public class OCRActivity extends Activity implements OnClickListener {
 			Toast.makeText(getApplicationContext(), "SD卡不可用", Toast.LENGTH_LONG).show();
 			return;
 		}
-		File dir = new File(getFilesDir().getAbsolutePath() + "/tessdata");
+		File dir = new File(getExternalFilesDir("apk").getAbsolutePath() + "/tessdata");
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}

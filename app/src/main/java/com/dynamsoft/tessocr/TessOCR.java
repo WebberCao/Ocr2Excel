@@ -27,7 +27,9 @@ public class TessOCR {
 	public TessOCR(Context context) {
 		mContext = context;
 		mTess = new TessBaseAPI();
-        TESSBASE_PATH = mContext.getFilesDir().getAbsolutePath();
+//        TESSBASE_PATH = mContext.getFilesDir().getAbsolutePath();
+//        TESSBASE_DATA = TESSBASE_PATH + "/tessdata";
+        TESSBASE_PATH = mContext.getExternalFilesDir("apk").getAbsolutePath();
         TESSBASE_DATA = TESSBASE_PATH + "/tessdata";
 		initData();
 		mTess.init(TESSBASE_PATH, CHINESE_LANGUAGE);
@@ -54,11 +56,13 @@ public class TessOCR {
                 return;
             }
             File folder = new File(TESSBASE_DATA);
-            if (folder.exists() && folder.isDirectory()) {
-                //do nothing
-            } else {
-                folder.mkdirs();
-            }
+            folder.mkdir();
+//            File folder = Environment.getExternalStoragePublicDirectory(TESSBASE_DATA);
+//            if (folder.exists() && folder.isDirectory()) {
+//                //do nothing
+//            } else {
+//                folder.mkdirs();
+//            }
             copyRawToSdcard(mContext,folder);
 
         }catch (Exception e){
